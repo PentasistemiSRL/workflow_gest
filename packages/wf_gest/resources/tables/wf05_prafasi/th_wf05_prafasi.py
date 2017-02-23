@@ -8,12 +8,12 @@ class ViewFromPRA(BaseComponent):
 
     def th_struct(self,struct):
         r = struct.view().rows()
-        r.fieldcell('wf05_progr',edit=True)
+        r.fieldcell('wf05_progr',counter=True)
         r.fieldcell('wf05_regolafase_wf01',edit=True)
         r.fieldcell('wf05_operatore',edit=True)
         r.fieldcell('wf05_dataapertura',edit=True)
         r.fieldcell('wf05_datachiusura',edit=True)
-        r.fieldcell('wf05_operatorechiu', condition="$tb03_firma = 'S'",edit=True)
+        r.fieldcell('wf05_operatorechiu',edit=dict(condition="$tb03_firma = 'S'"))
 
     def th_order(self):
         return 'wf05_progr'

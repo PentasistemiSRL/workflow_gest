@@ -39,17 +39,27 @@ class Form(BaseComponent):
         fb.field('wf04_chiusuraope', condition="$tb03_firma = 'S'",colspan=2)
 
         fb.button('Genera Fasi',
-                     action="""var risposta = confirm("Confermi la creazione delle fasi pratica?");
-                               if (risposta == true){
-							     alert("Risposta Positiva")
-							   } else 
-							   {
-							     alert("Risposta Negativa")
-							   };""",
-                     style='color:red;font-size:20px;')
+                    ask=dict(title='Quante Fasi?',
+                                fields=[dict(name='numero_fasi',lbl='Numero',wdg='numberTextBox'),
+                                        dict(name='data_apertura',lbl='Data',wdg='dateTextBox')]),
+                     action='FIRE #FORM.genera_fasi = numero_fasi',
+                     style='color:red;font-size:20px;',
+                     disabled='^#FORM.controller.is_newrecord',
+                     hidden='^#vista_fasi.view.store?=#v && #v.len()>0')
+        fb.dataRpc(None,self.creaWorkflow,pratica_id='=#FORM.pkey',n_fasi='^#FORM.genera_fasi')
 					  
         center = bc.contentPane(region='center')
-        center.inlineTableHandler(relation='@fasi_pratica',viewResource='ViewFromPRA')
+        center.inlineTableHandler(relation='@fasi_pratica',grid_selfDragRows=True,
+                                    viewResource='ViewFromPRA',nodeId='vista_fasi')
+
+    @public_method
+    def creaWorkflow(self,pratica_id=None,n_fasi=None):
+        fasi = self.db.table('wf_gest.wf05_prafasi')
+        n_fasi = n_fasi or 4
+        for i in range(n_fasi):
+            record = dict(wf05_pratica_wf04=pratica_id,wf05_progr=i,wf05_dataapertura=self.workdate)
+            fasi.insert(record)
+        self.db.commit()
 
 
     def th_options(self):

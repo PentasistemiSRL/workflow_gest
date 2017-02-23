@@ -12,3 +12,4 @@ class Package(GnrDboPackage):
         
 class Table(GnrDboTable):
     pass
+    

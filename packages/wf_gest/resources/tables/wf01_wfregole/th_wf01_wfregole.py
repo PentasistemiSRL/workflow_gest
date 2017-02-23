@@ -28,6 +28,7 @@ class Form(BaseComponent):
         fb.field('wf01_desregola')
         fb.field('wf01_blocca')
         fb.field('wf01_dipende')
+        fb.field('blocca_tutto')
 
 
     def th_options(self):
